@@ -1,15 +1,14 @@
+"""Copyright 2023 Daavid Stein. ALl Rights Reserved"""
 from time import sleep
 from logging import getLogger
 import requests
-from typing import List
+from typing import List, Callable
 from tqdm import tqdm
+from aws import get_secret
 logger = getLogger(__name__)
-def get_huggingface_api_key(path: str = "huggingface_key.txt") -> str:
-    with open(path, "r") as f:
-        key = f.read()
-    return key
 
-def retry(request_fun):
+
+def retry(request_fun: Callable):
 
     def wrapper(*args, **kwargs):
         response = request_fun(*args, **kwargs)
@@ -31,7 +30,7 @@ def isit(x: str, y: str) -> float:
     """
 
     API_URL = "https://api-inference.huggingface.co/models/roberta-large-mnli"
-    headers = {"Authorization": f"Bearer {get_huggingface_api_key()}"}
+    headers = {"Authorization": f"Bearer {get_secret('huggingface')}"}
     payload = {
 	"inputs": f" x is a {x} Therefore x is a {y}.",
 }
@@ -51,7 +50,7 @@ def get_food_entities(inputs):
     #distillbert seems to behave *very* differently with all caps.
     line_item = inputs.lower()
     API_URL = "https://api-inference.huggingface.co/models/chambliss/distilbert-for-food-extraction"
-    headers = {"Authorization": f"Bearer {get_huggingface_api_key()}"}
+    headers = {"Authorization": f"Bearer {get_secret('huggingface')}"}
     payload = {
 	"inputs": line_item,
 }

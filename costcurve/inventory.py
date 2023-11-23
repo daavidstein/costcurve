@@ -1,3 +1,5 @@
+"""Copyright 2023 Daavid Stein. ALl Rights Reserved"""
+
 import networkx as nx
 from collections import Counter,defaultdict
 from typing import List, Tuple, Set, Dict
